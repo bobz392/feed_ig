@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:instagram_feed/widgets/feed_widget.dart';
-import 'package:instagram_feed/widgets/profile_widget.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -66,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage>
                     "https://picsum.photos/id/${6 + index}/300/400",
                     "https://picsum.photos/id/${7 + index}/300/400",
                   ],
+                  row: index,
                   userName: "userName",
                   location: "location",
                   imageUrl: "https://picsum.photos/id/$index/50/50");

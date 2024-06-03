@@ -8,15 +8,15 @@ class FeedWidget extends ConsumerWidget {
   final String userName;
   final String location;
   final String imageUrl;
+  final int row;
   final List<String> imgList;
 
-  final _pageController = PageController();
-
-  FeedWidget({
+  const FeedWidget({
     super.key,
     required this.userName,
     required this.location,
     required this.imageUrl,
+    required this.row,
     required this.imgList,
   });
 
@@ -37,11 +37,12 @@ class FeedWidget extends ConsumerWidget {
           const SizedBox(height: 5),
           MediaContentWidget(
             imgList: imgList,
+            row: row,
           ),
           const SizedBox(height: 15),
           FeedOperationsWidget(
-            pageController: _pageController,
             pageCount: imgList.length,
+            row: row,
           ),
           const SizedBox(height: 15),
           const CommentsWidget(

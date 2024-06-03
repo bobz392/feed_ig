@@ -4,15 +4,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:instagram_feed/providers/page_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 /// image releated media contents
 class MediaContentWidget extends ConsumerWidget {
   final List<String> imgList;
+  final int row;
 
   const MediaContentWidget({
     super.key,
     required this.imgList,
+    required this.row,
   });
 
   @override
@@ -22,6 +25,9 @@ class MediaContentWidget extends ConsumerWidget {
         aspectRatio: 3.0 / 4.0,
         viewportFraction: 1.0,
         enableInfiniteScroll: false,
+        onPageChanged: (page, reason) {
+          ref.read(pageNotifierProvider(row).notifier).setPage(page);
+        },
       ),
       items: imgList
           .map((item) => Center(
@@ -44,24 +50,25 @@ class MediaContentWidget extends ConsumerWidget {
 
 /// bottom operation widget
 class FeedOperationsWidget extends ConsumerWidget {
-  final PageController pageController;
   final int pageCount;
+  final int row;
 
   const FeedOperationsWidget({
     super.key,
-    required this.pageController,
     required this.pageCount,
+    required this.row,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final page = ref.watch(pageNotifierProvider(row));
     return Container(
       color: Colors.black,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(width: 25),
+          const SizedBox(width: 15),
           SvgPicture.asset(
             'assets/svg/heart-regular.svg',
             width: 50,
@@ -86,12 +93,13 @@ class FeedOperationsWidget extends ConsumerWidget {
                 const ColorFilter.mode(Colors.white70, BlendMode.srcIn),
           ),
           const Spacer(),
-          SmoothPageIndicator(
-            controller: pageController,
+          AnimatedSmoothIndicator(
+            activeIndex: page,
             count: pageCount,
             effect: const ScrollingDotsEffect(
               dotHeight: 6,
               dotWidth: 6,
+              maxVisibleDots: 5,
             ),
           ),
           const Spacer(),
